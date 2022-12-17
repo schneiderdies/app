@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %} Заголовок опроса {% endblock %}
+
+{% block content %}
+<form class="container" action="/process">
+    <h4>Анкета информанта</h4>
+    <div class="row">
+        <div class="col-md-4">Фамилия Имя</div>
+        <div class="col-md-4"><input type="text" name="full_name" required></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">Возраст</div>
+        <div class="col-md-4"><input type="number" name="age" required></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">Город</div>
+        <div class="col-md-4"><input type="text" name="city" required></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">Гендер</div>
+        <select name="gender" class="col-md-4" required>
+            <option value="male">м</option>
+            <option value="female">ж</option>
+            <option value="other">другой</option>
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-md-4">Родные языки</div>
+        <div class="col-md-4"><input type="text" name="languages" required></div>
+    </div>
+    <h2>Вопросы</h2>
+    {% for question in questions %}
+    <div class="row">
+        <p class="col-md-10"><font size="5">{{question.content}}</font></p>
+        {% if question.type == 1 %}
+        <div class="row">
+            <div class="col-md-50"><input type="text" name="q{{ question.id }}" required></div>
+        </div>
+        {% endif %}
+        {% if question.type == 2 %}
+        <table class="col-md-8">
+            <tr>
+                {% for option in options %}
+                {% if option.question_id == question.id %}
+                <td><input class="radio" type="radio" name="q{{ question.id }}" value={{option.value}} required></td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for option in options %}
+                {% if option.question_id == question.id %}
+                <td>{{option.option}}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </table>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <div class="row">
+        <input class="submit" type="submit" name="submit" value="Отправить">
+    </div>
+</form>
+
+{% endblock %}
